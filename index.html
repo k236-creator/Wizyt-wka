@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Słodki Chłopak — Jak oceniasz nas?</title>
+  <meta name="theme-color" content="#1c1410" />
+  <meta name="robots" content="noindex" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+          },
+          colors: {
+            cocoa: { 900: '#1c1410', 800: '#2a1e17', 700: '#3a2a20' },
+            cream: '#fbf3e6',
+            gold: '#f2b84b',
+            rose: { sweet: '#e8788f' },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body {
+      background:
+        radial-gradient(900px 500px at 15% -10%, rgba(232,120,143,.18), transparent 60%),
+        radial-gradient(800px 500px at 100% 110%, rgba(242,184,75,.16), transparent 60%),
+        #1c1410;
+      min-height: 100dvh;
+    }
+
+    /* ---------- Stars ---------- */
+    .star-btn { transition: transform .25s cubic-bezier(.34,1.56,.64,1); -webkit-tap-highlight-color: transparent; }
+    .star-btn:hover { transform: scale(1.15) rotate(-4deg); }
+    .star-btn:active { transform: scale(.92); }
+    .star-btn svg path {
+      fill: transparent;
+      stroke: rgba(251,243,230,.35);
+      stroke-width: 1.6;
+      transition: fill .25s ease, stroke .25s ease, filter .25s ease;
+    }
+    .star-btn.active svg path {
+      fill: #f2b84b;
+      stroke: #f2b84b;
+      filter: drop-shadow(0 0 10px rgba(242,184,75,.55));
+    }
+    .star-btn.pop { animation: pop .5s cubic-bezier(.34,1.56,.64,1); }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.4) rotate(12deg); }
+      100% { transform: scale(1); }
+    }
+
+    /* ---------- Screen transitions ---------- */
+    .screen { animation: screenIn .55s cubic-bezier(.2,.8,.2,1) both; }
+    @keyframes screenIn {
+      from { opacity: 0; transform: translateY(14px) scale(.985); }
+      to   { opacity: 1; transform: none; }
+    }
+    .screen-out { animation: screenOut .25s ease both; }
+    @keyframes screenOut { to { opacity: 0; transform: translateY(-8px); } }
+
+    /* ---------- Thank-you check ---------- */
+    .check-circle { stroke-dasharray: 166; stroke-dashoffset: 166; animation: draw .7s .1s ease forwards; }
+    .check-mark   { stroke-dasharray: 48;  stroke-dashoffset: 48;  animation: draw .45s .65s ease forwards; }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+
+    .progress-bar { transform-origin: left; animation: fill 1.5s linear forwards; }
+    @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+    /* ---------- Confetti ---------- */
+    .confetti { position: fixed; top: -12px; width: 8px; height: 14px; border-radius: 2px; opacity: .95; pointer-events: none; animation: fall linear forwards; z-index: 50; }
+    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: .8; } }
+
+    /* ---------- Logo float ---------- */
+    .float { animation: float 5s ease-in-out infinite; }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+    /* ---------- Fortune wheel ---------- */
+    #wheelSvg { will-change: transform; filter: drop-shadow(0 10px 22px rgba(0,0,0,.45)); }
+    .hub { transition: transform .2s ease; }
+    .hub:hover:not(:disabled) { transform: scale(1.08); }
+    .hub:active:not(:disabled) { transform: scale(.94); }
+    .pulse-ring { animation: pulseRing 2s ease-out infinite; }
+    @keyframes pulseRing { 0% { box-shadow: 0 0 0 0 rgba(242,184,75,.55); } 100% { box-shadow: 0 0 0 18px rgba(242,184,75,0); } }
+    .coupon { background: repeating-linear-gradient(135deg, rgba(242,184,75,.16) 0 10px, rgba(242,184,75,.08) 10px 20px); }
+
+    textarea:focus, button:focus-visible, a:focus-visible { outline: 2px solid #f2b84b; outline-offset: 2px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+    }
+  </style>
+</head>
+
+<body class="font-sans text-cream antialiased">
+
+  <!-- Language switch -->
+  <div class="fixed top-4 right-4 z-40 flex rounded-full border border-white/10 bg-white/5 p-0.5 text-xs backdrop-blur">
+    <button data-lang="pl" class="lang-btn rounded-full px-3 py-1.5 font-medium transition">PL</button>
+    <button data-lang="ru" class="lang-btn rounded-full px-3 py-1.5 font-medium transition">RU</button>
+  </div>
+
+  <main class="mx-auto flex min-h-[100dvh] w-full max-w-md items-center justify-center px-5 py-10">
+    <div class="w-full rounded-[2rem] border border-white/10 bg-gradient-to-b from-white/[.07] to-white/[.03] p-7 shadow-2xl shadow-black/40 backdrop-blur-xl sm:p-9">
+
+      <!-- Brand -->
+      <header class="mb-7 text-center">
+        <div class="float mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-cream to-[#f3dcc0] shadow-lg shadow-black/30 ring-4 ring-white/10">
+          <!-- Original sweet logo: cupcake -->
+          <svg viewBox="0 0 64 64" class="h-14 w-14" aria-hidden="true">
+            <path d="M14 30h36l-4.5 25a3 3 0 0 1-3 2.5h-21a3 3 0 0 1-3-2.5L14 30z" fill="#8a5a3c"/>
+            <path d="M22 30l2.5 27M32 30v27.5M42 30l-2.5 27" stroke="#6e4329" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M10 30c0-6 4-9 8-9 0-7 6-12 14-12s14 5 14 12c4 0 8 3 8 9 0 2-2 4-5 4H15c-3 0-5-2-5-4z" fill="#e8788f"/>
+            <path d="M22 21c2-5 6-7 10-7" stroke="#fff" stroke-opacity=".5" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+            <circle cx="32" cy="7" r="4.2" fill="#c0283f"/>
+            <path d="M32 3.2c1-2 2.8-2.8 4.5-2.6" stroke="#4a7a3a" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <p class="font-serif text-2xl font-semibold tracking-wide" id="brandName">Słodki Chłopak</p>
+        <p class="mt-1 text-[11px] uppercase tracking-[.22em] text-cream/55" id="brandSub"></p>
+      </header>
+
+      <!-- SCREEN 0: Fortune wheel -->
+      <section id="screenWheel" class="screen text-center">
+        <h1 class="font-serif text-[1.75rem] font-semibold leading-tight sm:text-3xl" data-i18n="wheelTitle"></h1>
+        <p class="mt-2 text-sm text-cream/60" data-i18n="wheelSub"></p>
+
+        <div class="relative mx-auto mt-7 h-72 w-72 max-w-full">
+          <svg class="absolute -top-2 left-1/2 z-10 h-8 w-8 -translate-x-1/2 drop-shadow-lg" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 22L3 4h18z" fill="#f2b84b" stroke="#1c1410" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+          <svg id="wheelSvg" viewBox="-100 -100 200 200" class="h-full w-full" aria-hidden="true"></svg>
+          <button id="hubBtn" type="button" aria-label="Spin"
+            class="hub pulse-ring absolute inset-0 m-auto flex h-16 w-16 items-center justify-center rounded-full border-4 border-gold bg-cream text-2xl shadow-lg">🧁</button>
+        </div>
+
+        <button id="spinBtn" type="button"
+          class="mt-7 w-full rounded-2xl bg-gradient-to-r from-gold to-[#f08a5d] px-5 py-3.5 text-[15px] font-semibold text-cocoa-900 shadow-lg shadow-black/30 transition hover:brightness-110 active:scale-[.98] disabled:opacity-60"
+          data-i18n="spin"></button>
+        <p id="oddsNote" class="mt-3 text-[11px] leading-relaxed text-cream/45"></p>
+        <button id="skipBtn" type="button" class="mt-3 text-xs text-cream/50 underline underline-offset-4 hover:text-cream/80" data-i18n="skip"></button>
+      </section>
+
+      <!-- SCREEN 0b: Wheel result -->
+      <section id="screenPrize" class="screen hidden text-center">
+        <div id="prizeIcon" class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gold/15 text-4xl"></div>
+        <h2 id="prizeTitle" class="mt-5 font-serif text-3xl font-semibold"></h2>
+        <p id="prizeText" class="mt-2 text-cream/70"></p>
+
+        <div id="couponBox" class="coupon mt-6 hidden rounded-2xl border border-dashed border-gold/60 p-5">
+          <p class="text-[11px] uppercase tracking-[.22em] text-cream/60" data-i18n="codeLabel"></p>
+          <p id="couponCode" class="mt-1 font-mono text-3xl font-semibold tracking-widest text-gold"></p>
+          <p id="couponExp" class="mt-1 text-xs text-cream/60"></p>
+        </div>
+        <p id="prizeShot" class="mt-3 hidden text-[11px] text-cream/45" data-i18n="prizeShot"></p>
+
+        <button id="continueBtn" type="button"
+          class="mt-7 w-full rounded-2xl border border-white/15 bg-white/10 px-5 py-3.5 text-[15px] font-medium text-cream transition hover:bg-white/15 active:scale-[.98]"
+          data-i18n="continue"></button>
+      </section>
+
+      <!-- SCREEN 1: Rating -->
+      <section id="screenRating" class="screen hidden text-center">
+        <div id="couponBadge" class="mb-5 hidden rounded-xl border border-gold/40 bg-gold/10 px-3 py-2 text-xs text-gold"></div>
+        <h1 class="font-serif text-[1.75rem] font-semibold leading-tight sm:text-3xl" data-i18n="title"></h1>
+        <p class="mt-2 text-sm text-cream/60" data-i18n="subtitle"></p>
+
+        <div id="stars" class="mt-8 flex justify-center gap-1.5 sm:gap-2" role="radiogroup" aria-label="Rating"></div>
+        <p id="starLabel" class="mt-4 h-5 text-sm font-medium text-gold/90 transition-opacity"></p>
+      </section>
+
+      <!-- SCREEN 2: Thanks (4–5 stars) -->
+      <section id="screenThanks" class="screen hidden text-center">
+        <svg viewBox="0 0 56 56" class="mx-auto h-24 w-24" fill="none" aria-hidden="true">
+          <circle class="check-circle" cx="28" cy="28" r="26.5" stroke="#f2b84b" stroke-width="2.5"/>
+          <path class="check-mark" d="M16 29l8 8 16-17" stroke="#f2b84b" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <h2 class="mt-5 font-serif text-3xl font-semibold" data-i18n="thanksTitle"></h2>
+        <p class="mt-2 text-cream/70" data-i18n="thanksText"></p>
+        <p id="thanksHint" class="mt-3 text-sm font-medium text-gold"></p>
+        <div class="mx-auto mt-7 h-1 w-40 overflow-hidden rounded-full bg-white/10">
+          <div id="progress" class="progress-bar h-full w-full rounded-full bg-gradient-to-r from-gold to-rose-sweet"></div>
+        </div>
+        <a id="manualLink" href="#" class="mt-4 inline-block text-xs text-cream/50 underline underline-offset-4 hover:text-cream/80" data-i18n="manualLink"></a>
+      </section>
+
+      <!-- SCREEN 3: Feedback (1–3 stars) -->
+      <section id="screenFeedback" class="screen hidden">
+        <button id="backBtn" type="button" class="mb-4 inline-flex items-center gap-1 text-xs text-cream/55 transition hover:text-cream">
+          <svg viewBox="0 0 20 20" class="h-4 w-4" fill="currentColor"><path d="M12.7 4.3a1 1 0 0 1 0 1.4L8.4 10l4.3 4.3a1 1 0 1 1-1.4 1.4l-5-5a1 1 0 0 1 0-1.4l5-5a1 1 0 0 1 1.4 0z"/></svg>
+          <span data-i18n="back"></span>
+        </button>
+
+        <div class="mb-1 flex items-center gap-2" id="miniStars" aria-hidden="true"></div>
+        <h2 class="mt-2 font-serif text-2xl font-semibold leading-snug" data-i18n="feedbackTitle"></h2>
+        <p class="mt-1.5 text-sm text-cream/60" data-i18n="feedbackSub"></p>
+
+        <label for="complaint" class="sr-only" data-i18n="feedbackTitle"></label>
+        <textarea id="complaint" rows="5" maxlength="1000"
+          class="mt-5 w-full resize-none rounded-2xl border border-white/10 bg-black/25 p-4 text-[15px] text-cream placeholder-cream/35 transition focus:border-gold/60"></textarea>
+        <div class="mt-1 flex items-center justify-between text-[11px] text-cream/40">
+          <span id="errorMsg" class="text-rose-300"></span>
+          <span id="counter">0 / 1000</span>
+        </div>
+
+        <div id="sendButtons" class="mt-4 grid gap-2.5"></div>
+        <p class="mt-4 text-center text-[11px] leading-relaxed text-cream/40" data-i18n="privacyNote"></p>
+      </section>
+
+      <!-- SCREEN 4: After sending -->
+      <section id="screenSent" class="screen hidden text-center">
+        <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gold/15 text-4xl">💌</div>
+        <h2 class="mt-5 font-serif text-3xl font-semibold" data-i18n="sentTitle"></h2>
+        <p class="mt-2 text-cream/70" data-i18n="sentText"></p>
+        <button id="againBtn" type="button" class="mt-7 text-sm text-cream/55 underline underline-offset-4 hover:text-cream" data-i18n="again"></button>
+      </section>
+
+    </div>
+  </main>
+
+<script>
+/* =====================================================================
+   ⚙️  KONFIGURACJA / КОНФИГУРАЦИЯ  — меняйте только этот блок
+   ===================================================================== */
+const CONFIG = {
+  // Название и подпись заведения
+  BUSINESS_NAME: 'Słodki Chłopak',
+  BUSINESS_TAGLINE: { pl: 'Pracownia cukiernicza i kawiarnia', ru: 'Кондитерская мастерская и кофейня' },
+
+  // Ссылка на отзывы в Google.
+  // Сейчас стоит ссылка на карточку заведения (по CID из вашей ссылки на Maps).
+  // Лучше заменить на прямую ссылку на форму отзыва — см. README ниже:
+  //   https://search.google.com/local/writereview?placeid=ВАШ_PLACE_ID
+  GOOGLE_REVIEW_URL: 'https://www.google.com/maps?cid=16559469655631134755',
+
+  // ⭐ ПРЯМОЕ ОКНО «НАПИСАТЬ ОТЗЫВ» (со звёздами и полем текста):
+  // вставьте сюда Place ID заведения (строка вида ChIJ...) — и клиента будет
+  // открываться сразу форма отзыва, а не карточка на карте.
+  // Найти: https://developers.google.com/maps/documentation/places/web-service/place-id
+  // (введите "Słodki Chłopak Wrocław" и скопируйте Place ID)
+  GOOGLE_PLACE_ID: 'ChIJmRnvyFjDD0cRIwDBfOoNz-U',   // Słodki Chłopak (получен из ссылки на Maps)
+
+  // Куда отправлять жалобы владельцу:
+  OWNER_PHONE: '+48XXXXXXXXX',                 // ← формат международный, без пробелов
+  OWNER_EMAIL: 'owner@example.com',            // ← ваша почта
+  EMAIL_SUBJECT: 'Жалоба от клиента',          // тема письма
+
+  // Способ отправки: 'choice' (клиент выбирает) | 'sms' | 'email'
+  SEND_MODE: 'choice',
+
+  // Сколько ждать перед переходом в Google (мс)
+  REDIRECT_DELAY: 1500,
+
+  // 🎡 Колесо фортуны
+  WHEEL_ENABLED: true,           // false — отключить колесо
+  WIN_CHANCE: 0.10,              // шанс выигрыша (0.10 = 10%). Число секторов колеса считается автоматически (10% → 10 секторов)
+  DISCOUNT_PERCENT: 15,          // размер скидки
+  COUPON_PREFIX: 'SLODKI15',     // начало промокода
+  COUPON_VALID_DAYS: 14,         // сколько дней действует промокод
+  SPIN_COOLDOWN_DAYS: 30,        // как часто с одного устройства можно крутить (дней)
+};
+/* ===================================================================== */
+
+const I18N = {
+  pl: {
+    title: 'Jak oceniasz naszą obsługę?',
+    subtitle: 'Dotknij gwiazdki — to zajmie sekundę.',
+    labels: ['Bardzo słabo', 'Mogło być lepiej', 'Całkiem dobrze', 'Bardzo dobrze', 'Wspaniale!'],
+    thanksTitle: 'Dziękujemy!',
+    thanksText: 'Przenosimy Cię do Google, aby zostawić opinię…',
+    manualLink: 'Nie przekierowało? Kliknij tutaj',
+    back: 'Zmień ocenę',
+    feedbackTitle: 'Co możemy poprawić?',
+    feedbackSub: 'Przykro nam, że nie było idealnie. Napisz nam, co poszło nie tak — przeczyta to właściciel.',
+    placeholder: 'Opisz krótko, co poszło nie tak…',
+    sendSms: 'Wyślij SMS-em',
+    sendEmail: 'Wyślij e-mailem',
+    sendGeneric: 'Wyślij zgłoszenie',
+    privacyNote: 'Otworzy się Twoja aplikacja SMS / poczta z gotową wiadomością. Wystarczy ją wysłać.',
+    errEmpty: 'Napisz kilka słów, abyśmy mogli to poprawić.',
+    sentTitle: 'Dziękujemy za szczerość!',
+    sentText: 'Jeśli wiadomość się nie wysłała, wróć i spróbuj ponownie. Zajmiemy się sprawą.',
+    again: 'Wróć na początek',
+    msgRating: 'Ocena',
+    msgIntro: 'Opinia klienta (Słodki Chłopak)',
+    thanksHint: 'W Google stuknij {n} ★ i napisz kilka słów.',
+    wheelTitle: 'Zakręć kołem słodkości!',
+    wheelSub: 'Dziękujemy za wizytę! Zakręć i sprawdź, czy wygrywasz rabat na następne zakupy.',
+    spin: 'Zakręć!',
+    skip: 'Pomiń',
+    odds: 'Szansa na wygraną: {p}%. Udział w losowaniu nie zależy od wystawienia opinii.',
+    prizeWinTitle: 'Wygrałeś −{d}%!',
+    prizeWinText: 'Rabat na następny zakup. Pokaż ten kod przy kasie.',
+    prizeLoseTitle: 'Nie tym razem 🍰',
+    prizeLoseText: 'Dziękujemy za udział — zapraszamy po coś słodkiego następnym razem!',
+    codeLabel: 'Twój kod rabatowy',
+    codeExp: 'Ważny do {date}',
+    prizeShot: 'Zrób zrzut ekranu, aby nie zgubić kodu.',
+    continue: 'Dalej',
+    badge: 'Twój rabat −{d}%: {code} (do {date})',
+  },
+  ru: {
+    title: 'Как вам наш сервис?',
+    subtitle: 'Коснитесь звезды — это займёт секунду.',
+    labels: ['Очень плохо', 'Могло быть лучше', 'Неплохо', 'Хорошо', 'Великолепно!'],
+    thanksTitle: 'Dziękujemy! / Спасибо!',
+    thanksText: 'Переносим вас в Google, чтобы вы оставили отзыв…',
+    manualLink: 'Не перенаправило? Нажмите здесь',
+    back: 'Изменить оценку',
+    feedbackTitle: 'Что нам улучшить?',
+    feedbackSub: 'Жаль, что вышло не идеально. Напишите, что пошло не так — сообщение прочитает владелец.',
+    placeholder: 'Коротко опишите, что пошло не так…',
+    sendSms: 'Отправить по SMS',
+    sendEmail: 'Отправить по e-mail',
+    sendGeneric: 'Отправить жалобу',
+    privacyNote: 'Откроется ваше приложение SMS / почты с готовым текстом. Останется только нажать «Отправить».',
+    errEmpty: 'Напишите хотя бы пару слов, чтобы мы могли исправиться.',
+    sentTitle: 'Спасибо за честность!',
+    sentText: 'Если сообщение не ушло, вернитесь и попробуйте ещё раз. Мы разберёмся.',
+    again: 'Вернуться в начало',
+    msgRating: 'Оценка',
+    msgIntro: 'Отзыв клиента (Słodki Chłopak)',
+    thanksHint: 'В Google нажмите {n} ★ и напишите пару слов.',
+    wheelTitle: 'Крутите колесо сладостей!',
+    wheelSub: 'Спасибо, что зашли! Крутите колесо и узнайте, выиграли ли вы скидку на следующую покупку.',
+    spin: 'Крутить!',
+    skip: 'Пропустить',
+    odds: 'Шанс выигрыша: {p}%. Участие в розыгрыше не зависит от того, оставите ли вы отзыв.',
+    prizeWinTitle: 'Вы выиграли −{d}%!',
+    prizeWinText: 'Скидка на следующую покупку. Покажите этот код на кассе.',
+    prizeLoseTitle: 'В этот раз не повезло 🍰',
+    prizeLoseText: 'Спасибо за участие — заходите за сладким в следующий раз!',
+    codeLabel: 'Ваш промокод',
+    codeExp: 'Действует до {date}',
+    prizeShot: 'Сделайте скриншот, чтобы не потерять код.',
+    continue: 'Дальше',
+    badge: 'Ваша скидка −{d}%: {code} (до {date})',
+  },
+};
+
+/* ---------------- State & helpers ---------------- */
+const $ = (id) => document.getElementById(id);
+const screens = ['screenWheel', 'screenPrize', 'screenRating', 'screenThanks', 'screenFeedback', 'screenSent'];
+const starSVG = '<svg viewBox="0 0 24 24" class="h-11 w-11 sm:h-12 sm:w-12"><path d="M12 2.8l2.78 5.9 6.47.8-4.76 4.46 1.26 6.4L12 17.2l-5.75 3.16 1.26-6.4L2.75 9.5l6.47-.8L12 2.8z" stroke-linejoin="round"/></svg>';
+
+let lang = (localStorage.getItem('lang')) ||
+  (/^(ru|uk|be)/i.test(navigator.language || '') ? 'ru' : 'pl');
+let rating = 0;
+let redirectTimer = null;
+
+const t = (k) => I18N[lang][k];
+
+function show(id) {
+  clearTimeout(redirectTimer);
+  screens.forEach((s) => $(s).classList.add('hidden'));
+  const el = $(id);
+  el.classList.remove('hidden');
+  el.style.animation = 'none'; el.offsetHeight; el.style.animation = '';
+}
+
+/* ---------------- i18n ---------------- */
+function applyLang() {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  $('brandName').textContent = CONFIG.BUSINESS_NAME;
+  $('brandSub').textContent = CONFIG.BUSINESS_TAGLINE[lang];
+  $('complaint').placeholder = t('placeholder');
+  document.querySelectorAll('.lang-btn').forEach((b) => {
+    const on = b.dataset.lang === lang;
+    b.classList.toggle('bg-cream', on);
+    b.classList.toggle('text-cocoa-900', on);
+    b.classList.toggle('text-cream/70', !on);
+  });
+  renderSendButtons();
+  updateStarLabel(rating);
+  renderWheelTexts();
+}
+
+/* ---------------- Stars ---------------- */
+function buildStars() {
+  const wrap = $('stars');
+  for (let i = 1; i <= 5; i++) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'star-btn p-1 text-gold';
+    b.dataset.value = i;
+    b.setAttribute('role', 'radio');
+    b.setAttribute('aria-label', i + ' / 5');
+    b.innerHTML = starSVG;
+    b.addEventListener('mouseenter', () => paintStars(i));
+    b.addEventListener('focus', () => paintStars(i));
+    b.addEventListener('click', () => choose(i, b));
+    wrap.appendChild(b);
+  }
+  wrap.addEventListener('mouseleave', () => paintStars(rating));
+}
+
+function paintStars(n) {
+  document.querySelectorAll('#stars .star-btn').forEach((b) => {
+    b.classList.toggle('active', Number(b.dataset.value) <= n);
+  });
+  updateStarLabel(n);
+}
+
+function updateStarLabel(n) {
+  $('starLabel').textContent = n ? t('labels')[n - 1] : '';
+}
+
+/* ---------------- Funnel logic ---------------- */
+function choose(n, btn) {
+  rating = n;
+  paintStars(n);
+  btn.classList.remove('pop'); btn.offsetHeight; btn.classList.add('pop');
+  document.querySelectorAll('#stars .star-btn').forEach((b) => (b.disabled = true));
+
+  setTimeout(() => (n >= 4 ? goThanks() : goFeedback()), 550);
+}
+
+function reviewUrl() {
+  return CONFIG.GOOGLE_PLACE_ID
+    ? 'https://search.google.com/local/writereview?placeid=' + encodeURIComponent(CONFIG.GOOGLE_PLACE_ID)
+    : CONFIG.GOOGLE_REVIEW_URL;
+}
+
+function goThanks() {
+  show('screenThanks');
+  confetti();
+  renderWheelTexts();
+  const url = reviewUrl();
+  $('manualLink').href = url;
+  redirectTimer = setTimeout(() => { window.location.href = url; }, CONFIG.REDIRECT_DELAY);
+}
+
+function goFeedback() {
+  show('screenFeedback');
+  $('miniStars').innerHTML = Array.from({ length: 5 }, (_, i) =>
+    `<svg viewBox="0 0 24 24" class="h-5 w-5"><path d="M12 2.8l2.78 5.9 6.47.8-4.76 4.46 1.26 6.4L12 17.2l-5.75 3.16 1.26-6.4L2.75 9.5l6.47-.8L12 2.8z" fill="${i < rating ? '#f2b84b' : 'transparent'}" stroke="${i < rating ? '#f2b84b' : 'rgba(251,243,230,.3)'}" stroke-width="1.5" stroke-linejoin="round"/></svg>`
+  ).join('');
+  setTimeout(() => $('complaint').focus({ preventScroll: true }), 400);
+}
+
+function resetAll() {
+  rating = 0;
+  $('complaint').value = '';
+  $('counter').textContent = '0 / 1000';
+  $('errorMsg').textContent = '';
+  document.querySelectorAll('#stars .star-btn').forEach((b) => { b.disabled = false; b.classList.remove('pop'); });
+  paintStars(0);
+  show('screenRating');
+}
+
+/* ---------------- Sending complaint via sms: / mailto: ---------------- */
+function buildMessage(text) {
+  return `${t('msgIntro')}\n${t('msgRating')}: ${rating}/5\n\n${text.trim()}`;
+}
+
+function sendSms(text) {
+  const phone = CONFIG.OWNER_PHONE.replace(/[^\d+]/g, '');
+  // iOS uses "&body=", Android uses "?body="
+  const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const sep = isiOS ? '&' : '?';
+  window.location.href = `sms:${phone}${sep}body=${encodeURIComponent(buildMessage(text))}`;
+}
+
+function sendEmail(text) {
+  const subject = encodeURIComponent(CONFIG.EMAIL_SUBJECT);
+  const body = encodeURIComponent(buildMessage(text));
+  window.location.href = `mailto:${CONFIG.OWNER_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+function submit(kind) {
+  const text = $('complaint').value;
+  if (!text.trim()) {
+    $('errorMsg').textContent = t('errEmpty');
+    $('complaint').focus();
+    return;
+  }
+  $('errorMsg').textContent = '';
+  kind === 'sms' ? sendSms(text) : sendEmail(text);
+  setTimeout(() => show('screenSent'), 700);
+}
+
+function renderSendButtons() {
+  const mode = CONFIG.SEND_MODE;
+  const primary = 'w-full rounded-2xl bg-gradient-to-r from-gold to-[#f08a5d] px-5 py-3.5 text-[15px] font-semibold text-cocoa-900 shadow-lg shadow-black/30 transition active:scale-[.98] hover:brightness-110';
+  const secondary = 'w-full rounded-2xl border border-white/15 bg-white/5 px-5 py-3.5 text-[15px] font-medium text-cream transition active:scale-[.98] hover:bg-white/10';
+  const box = $('sendButtons');
+  box.innerHTML = '';
+  const add = (label, kind, cls) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = cls; b.textContent = label;
+    b.addEventListener('click', () => submit(kind));
+    box.appendChild(b);
+  };
+  if (mode === 'sms')   add('✉️ ' + t('sendGeneric'), 'sms', primary);
+  else if (mode === 'email') add('✉️ ' + t('sendGeneric'), 'email', primary);
+  else { add('💬 ' + t('sendSms'), 'sms', primary); add('📧 ' + t('sendEmail'), 'email', secondary); }
+}
+
+/* ---------------- Confetti ---------------- */
+function confetti() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const colors = ['#f2b84b', '#e8788f', '#fbf3e6', '#f08a5d', '#8a5a3c'];
+  for (let i = 0; i < 38; i++) {
+    const c = document.createElement('i');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[i % colors.length];
+    c.style.animationDuration = 1.6 + Math.random() * 1.6 + 's';
+    c.style.animationDelay = Math.random() * 0.35 + 's';
+    c.style.transform = `rotate(${Math.random() * 360}deg)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3800);
+  }
+}
+
+/* ---------------- Fortune wheel ---------------- */
+const WHEEL_KEY = 'sc_wheel_v1';
+const N_SLICES = Math.min(20, Math.max(4, Math.round(1 / CONFIG.WIN_CHANCE)));
+const SLICE = 360 / N_SLICES;
+let wheelRot = 0;
+let spinning = false;
+let prize = null;
+
+const loadSaved = () => { try { return JSON.parse(localStorage.getItem(WHEEL_KEY)); } catch (e) { return null; } };
+const saveResult = (r) => { try { localStorage.setItem(WHEEL_KEY, JSON.stringify(r)); } catch (e) {} };
+
+function secureRandom() {
+  const a = new Uint32Array(1);
+  crypto.getRandomValues(a);
+  return a[0] / 4294967296;
+}
+const pt = (deg, r) => {
+  const rad = deg * Math.PI / 180;
+  return [(r * Math.sin(rad)).toFixed(2), (-r * Math.cos(rad)).toFixed(2)];
+};
+const fill = (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => o[k]);
+const fmtDate = (ts) => new Date(ts).toLocaleDateString(lang === 'ru' ? 'ru-RU' : 'pl-PL', { day: 'numeric', month: 'long', year: 'numeric' });
+
+function buildWheel() {
+  const emojis = ['🍰', '🧁', '☕', '🍩', '🥐', '🍪'];
+  let svg = `<defs>
+    <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd27a"/><stop offset="1" stop-color="#f2b84b"/>
+    </linearGradient></defs>`;
+  for (let i = 0; i < N_SLICES; i++) {
+    const a0 = i * SLICE, a1 = (i + 1) * SLICE, c = a0 + SLICE / 2;
+    const [x0, y0] = pt(a0, 92), [x1, y1] = pt(a1, 92);
+    const win = i === 0;
+    const fillCol = win ? 'url(#goldGrad)' : (i % 2 ? '#3a2a20' : '#6b3a4a');
+    svg += `<path d="M0 0L${x0} ${y0}A92 92 0 0 1 ${x1} ${y1}Z" fill="${fillCol}" stroke="#1c1410" stroke-width="1"/>`;
+    svg += `<g transform="rotate(${c})">` + (win
+      ? `<text x="0" y="-60" text-anchor="middle" font-size="${N_SLICES > 12 ? 8 : 13}" font-weight="700" fill="#1c1410" font-family="Inter,sans-serif">−${CONFIG.DISCOUNT_PERCENT}%</text>`
+      : `<text x="0" y="-66" text-anchor="middle" font-size="${N_SLICES > 12 ? 9 : 14}">${emojis[i % emojis.length]}</text>`) + `</g>`;
+  }
+  svg += `<circle r="94" fill="none" stroke="#f2b84b" stroke-width="5"/>`;
+  for (let k = 0; k < N_SLICES * 2; k++) {
+    const [bx, by] = pt(k * SLICE / 2, 94);
+    svg += `<circle cx="${bx}" cy="${by}" r="1.7" fill="#fbf3e6"/>`;
+  }
+  $('wheelSvg').innerHTML = svg;
+}
+
+function spin() {
+  if (spinning) return;
+  spinning = true;
+  $('spinBtn').disabled = true;
+  $('hubBtn').disabled = true;
+  $('hubBtn').classList.remove('pulse-ring');
+  $('skipBtn').classList.add('invisible');
+
+  const win = secureRandom() < CONFIG.WIN_CHANCE;
+  const idx = win ? 0 : 1 + Math.floor(secureRandom() * (N_SLICES - 1));
+  const jitter = (secureRandom() - 0.5) * SLICE * 0.7;
+  wheelRot = Math.ceil(wheelRot / 360) * 360 + 360 * 6 - (idx * SLICE + SLICE / 2) + jitter;
+
+  const el = $('wheelSvg');
+  el.style.transition = 'transform 5.2s cubic-bezier(.12,.62,.08,1)';
+  el.style.transform = `rotate(${wheelRot}deg)`;
+  setTimeout(() => finishSpin(win), 5500);
+}
+
+function makeCode() {
+  const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let s = '';
+  for (let i = 0; i < 5; i++) s += abc[Math.floor(secureRandom() * abc.length)];
+  return `${CONFIG.COUPON_PREFIX}-${s}`;
+}
+
+function finishSpin(win) {
+  spinning = false;
+  const r = { won: win, ts: Date.now() };
+  if (win) { r.code = makeCode(); r.expires = Date.now() + CONFIG.COUPON_VALID_DAYS * 864e5; }
+  saveResult(r);
+  prize = r;
+  renderWheelTexts();
+  show('screenPrize');
+  if (win) confetti();
+}
+
+function renderWheelTexts() {
+  $('oddsNote').textContent = fill(t('odds'), { p: Math.round(CONFIG.WIN_CHANCE * 100) });
+  $('thanksHint').textContent = rating >= 4 ? fill(t('thanksHint'), { n: rating }) : '';
+  const saved = prize || loadSaved();
+  const valid = saved && saved.won && saved.expires > Date.now();
+
+  if (prize) {
+    const won = prize.won;
+    $('prizeIcon').textContent = won ? '🎉' : '🍰';
+    $('prizeTitle').textContent = won ? fill(t('prizeWinTitle'), { d: CONFIG.DISCOUNT_PERCENT }) : t('prizeLoseTitle');
+    $('prizeText').textContent = won ? t('prizeWinText') : t('prizeLoseText');
+    $('couponBox').classList.toggle('hidden', !won);
+    $('prizeShot').classList.toggle('hidden', !won);
+    if (won) {
+      $('couponCode').textContent = prize.code;
+      $('couponExp').textContent = fill(t('codeExp'), { date: fmtDate(prize.expires) });
+    }
+  }
+
+  const badge = $('couponBadge');
+  if (valid) {
+    badge.textContent = fill(t('badge'), { d: CONFIG.DISCOUNT_PERCENT, code: saved.code, date: fmtDate(saved.expires) });
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+
+function startScreen() {
+  const saved = loadSaved();
+  const cooldown = CONFIG.SPIN_COOLDOWN_DAYS * 864e5;
+  const canSpin = CONFIG.WHEEL_ENABLED && !(saved && Date.now() - saved.ts < cooldown);
+  show(canSpin ? 'screenWheel' : 'screenRating');
+}
+
+/* ---------------- Init ---------------- */
+document.querySelectorAll('.lang-btn').forEach((b) =>
+  b.addEventListener('click', () => { lang = b.dataset.lang; localStorage.setItem('lang', lang); applyLang(); }));
+$('backBtn').addEventListener('click', resetAll);
+$('againBtn').addEventListener('click', resetAll);
+$('complaint').addEventListener('input', (e) => {
+  $('counter').textContent = `${e.target.value.length} / 1000`;
+  if (e.target.value.trim()) $('errorMsg').textContent = '';
+});
+
+$('spinBtn').addEventListener('click', spin);
+$('hubBtn').addEventListener('click', spin);
+$('skipBtn').addEventListener('click', () => show('screenRating'));
+$('continueBtn').addEventListener('click', () => show('screenRating'));
+
+// Для тестов: открыть страницу с ?reset — колесо снова станет доступным
+if (/[?&]reset\b/.test(location.search)) { try { localStorage.removeItem(WHEEL_KEY); } catch (e) {} }
+
+buildStars();
+buildWheel();
+applyLang();
+startScreen();
+</script>
+</body>
+</html>
